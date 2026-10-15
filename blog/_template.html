@@ -1,0 +1,178 @@
+<!doctype html>
+<!--
+  ==========================================================================
+  VALIDUSCAST — BLOG POST TEMPLATE
+  ==========================================================================
+  How to publish a new post:
+   1. Copy this file inside the /blog folder and rename it, e.g.
+        blog/my-new-post.html       (lowercase, hyphens, no spaces)
+   2. Replace everything marked  ✏️  below.
+   3. Put your images in  assets/img/blog/  and videos in  assets/video/
+      and reference them as  ../assets/img/blog/your-image.jpg
+   4. Add a card for the post on  blogs.html  (copy an existing
+      <a class="post-card"> block at the top of the "Writing" list).
+   5. Commit & push to GitHub — the site updates in a minute or two.
+
+  Building blocks you can repeat in any order inside <article class="prose">:
+     <h2>  section heading         <h3>  sub-heading
+     <p>   paragraph               <ul>/<ol>  lists
+     IMAGE  · VIDEO · YOUTUBE · TABLE · QUOTE · CALLOUT · EQUATION  (see below)
+  Everything is left-aligned by design.
+  ==========================================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- ✏️ Page title shown in the browser tab -->
+  <title>Your post title — ValidusCast</title>
+  <!-- ✏️ One-sentence summary (used by Google and link previews) -->
+  <meta name="description" content="One sentence describing the post.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/blog.css">
+</head>
+<body>
+
+  <!-- Navigation (leave as is) -->
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="../index.html"><img src="../assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../demo.html">Demo</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="article">
+    <div class="container">
+
+      <!-- ===================== HEADER ===================== -->
+      <header class="article-header">
+        <a class="article-back" href="../blogs.html">← All posts</a>
+        <!-- ✏️ Category tags -->
+        <div class="eyebrow"><span class="dot"></span>Category · Topic</div>
+        <!-- ✏️ Main heading (left aligned) -->
+        <h1>Your post title goes here</h1>
+        <!-- ✏️ Sub-heading -->
+        <p class="subtitle">A one- or two-line sub-heading that tells the reader what they will learn.</p>
+        <!-- ✏️ Author, date, reading time -->
+        <div class="article-meta">
+          <span>By <b>Author Name</b></span>
+          <span>1 Jan 2027</span>
+          <span>5 min read</span>
+        </div>
+      </header>
+
+      <!-- ===================== COVER (optional) =====================
+           Use an <img> or swap for a <video autoplay muted loop playsinline> -->
+      <figure class="article-cover">
+        <img src="../assets/img/blog/cover-dataset.jpg" alt="✏️ Describe the image">
+      </figure>
+
+      <!-- ===================== BODY ===================== -->
+      <article class="prose">
+
+        <p>✏️ Opening paragraph. Start with the question or problem the post answers.</p>
+
+        <h2>✏️ First section heading</h2>
+        <p>✏️ Paragraph text…</p>
+
+        <h3>✏️ A sub-heading inside the section</h3>
+        <p>✏️ Paragraph text…</p>
+
+        <!-- ---------- IMAGE ----------
+             class="wide"   → figure can be wider than the text column
+             class="paper"  → adds a white frame (good for white-background plots from papers)
+             Remove either class if not needed. -->
+        <figure class="wide paper">
+          <img src="../assets/img/blog/lm6-workflow.jpg" alt="✏️ Describe the image">
+          <figcaption><b>✏️ Figure title.</b> ✏️ Caption text and source.</figcaption>
+        </figure>
+
+        <p>✏️ More text after the image…</p>
+
+        <!-- ---------- VIDEO (your own .mp4 in assets/video/) ---------- -->
+        <figure class="wide">
+          <video controls muted playsinline preload="metadata" poster="../assets/img/hero-poster.jpg">
+            <source src="../assets/video/hero-pour.mp4" type="video/mp4">
+          </video>
+          <figcaption><b>✏️ Video title.</b> ✏️ What the reader is looking at.</figcaption>
+        </figure>
+
+        <!-- ---------- YOUTUBE VIDEO ----------
+             Replace VIDEO_ID with the id after "watch?v=" in the YouTube link. -->
+        <figure class="wide">
+          <div class="embed">
+            <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID" title="✏️ YouTube video title" loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <figcaption><b>✏️ Video title.</b> ✏️ Caption.</figcaption>
+        </figure>
+
+        <h2>✏️ Second section heading</h2>
+
+        <!-- ---------- LIST ---------- -->
+        <ul>
+          <li><strong>✏️ Point one.</strong> Explanation.</li>
+          <li><strong>✏️ Point two.</strong> Explanation.</li>
+        </ul>
+
+        <!-- ---------- QUOTE / KEY TAKEAWAY ---------- -->
+        <blockquote>✏️ A sentence you want the reader to remember.</blockquote>
+
+        <!-- ---------- CALLOUT BOX ---------- -->
+        <div class="callout"><strong>✏️ Note</strong>✏️ A limitation, assumption or tip.</div>
+
+        <!-- ---------- EQUATION ---------- -->
+        <div class="equation">ρ c<sub>eff</sub>(T) ∂T/∂t = ∇ · [ k(T) ∇T ]</div>
+
+        <!-- ---------- TABLE ---------- -->
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>✏️ Column</th><th>✏️ Column</th><th>✏️ Column</th></tr></thead>
+            <tbody>
+              <tr><td>Value</td><td>Value</td><td class="hl">Highlighted value</td></tr>
+              <tr><td>Value</td><td>Value</td><td>Value</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ---------- CODE ---------- -->
+        <pre><code>python train.py --epochs 50 --lr 1e-3</code></pre>
+
+        <h2>✏️ Conclusion</h2>
+        <p>✏️ Wrap up and link to the next step, e.g. <a href="../contact.html">get in touch</a>.</p>
+
+      </article>
+
+      <!-- ===================== AUTHOR + NEXT POST ===================== -->
+      <div class="article-end">
+        <div class="author">
+          <div class="avatar" aria-hidden="true"></div>
+          <div><b>✏️ Author Name</b><span>✏️ ValidusCast · Role</span></div>
+        </div>
+        <a class="next-post" href="lm6-castbench-dataset.html"><span>Next post</span><b>✏️ Title of the post to read next →</b></a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="legal" style="margin-top:0; border-top:0; padding-top:0;"><span>© <span data-year>2026</span> ValidusCast · Kothrud, Pune, India</span><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

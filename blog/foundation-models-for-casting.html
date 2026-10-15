@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why foundries still get it right on the third pour — ValidusCast</title>
+  <meta name="description" content="Defects, trial and error, and remelting: why we think casting needs a foundation model, what it should recommend, and what it cannot do yet.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/blog.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="../index.html"><img src="../assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../demo.html">Demo</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="article">
+    <div class="container">
+
+      <header class="article-header">
+        <a class="article-back" href="../blogs.html">← All posts</a>
+        <div class="eyebrow"><span class="dot"></span>Perspective · Foundries</div>
+        <h1>Why foundries still get it right on the third pour, and what a foundation model could change</h1>
+        <p class="subtitle">Trial and error is expensive in metal. Here is the problem as we see it, what we want to build, and the gap we cannot close alone.</p>
+        <div class="article-meta">
+          <span>By <b>Suhani Kolhatkar</b></span>
+          <span>14 Oct 2026</span>
+          <span>6 min read</span>
+        </div>
+      </header>
+
+      <figure class="article-cover">
+        <img src="../assets/img/blog/cover-foundation.jpg" alt="Simulated molten metal in a turbine-blade shell, Cool to Warm colours">
+      </figure>
+
+      <article class="prose">
+
+        <p>Ask anyone who has worked on a new pattern in a foundry and you will hear a familiar story: the first casting is rarely the final one. Somebody adjusts the gating, changes the pouring temperature a little, pours again, cuts the part, and checks. Eventually it works. Nobody thinks this is unusual. That is what got us interested.</p>
+
+        <h2>The problem: a casting is often right only after a few wrong ones</h2>
+
+        <h3>Defects are costly</h3>
+        <p>Shrinkage, porosity, blow holes and surface spots each mean a rejected part. By the time a defect is found, the metal has already been melted and poured, the mould has been made, and the time has been spent.</p>
+
+        <h3>Settings rely on experience</h3>
+        <p>Gating and mould design, metal velocity, and pouring and mould temperature are usually chosen from experience, then corrected by trial and error on every new pattern. Experience is valuable, but it does not transfer easily to a new alloy or an unusual geometry.</p>
+
+        <h3>Remelting adds up</h3>
+        <p>Scrap goes back to the furnace. That is more energy, more time and more cost, and less furnace capacity left for good castings.</p>
+
+        <div class="callout"><strong>The question we are asking</strong>Can a model, trained on casting data, suggest good starting settings for a given part and alloy, so that fewer trial pours are needed and fewer castings are scrapped?</div>
+
+        <h2>What simulation already does well</h2>
+        <p>Casting simulation software such as MAGMASOFT, ProCAST and POLYGONSOFT is excellent at showing what happens in a design you already have. You draw the part and the gating, set the process, and see filling and solidification. The limitation is in the loop around it: each design change is a new setup and a new solve.</p>
+
+        <!-- ===== Example of a VIDEO inside a blog post ===== -->
+        <figure class="wide">
+          <video controls muted loop playsinline preload="metadata" poster="../assets/img/hero-poster.jpg">
+            <source src="../assets/video/hero-pour.mp4" type="video/mp4">
+          </video>
+          <figcaption><b>Visualisation.</b> A gravity pour into an investment shell for a turbine blade, coloured by temperature with ParaView’s Cool to Warm map. Thin sections such as the tip shroud and airfoil cool first while the root and feeder stay hot.</figcaption>
+        </figure>
+
+        <p>We do not want to replace that. We want to help choose a good design to begin with, so the expensive, detailed simulation and the first real pour start from a better place. We see the two working together.</p>
+
+        <h2>Our vision: foundation models for castings</h2>
+        <p>In language and vision, “foundation model” means one model trained on broad data that can then be adapted to many tasks. For casting, we mean one family of models that learns from data across many metals, geometries and process conditions, rather than a separate tool for each case.</p>
+
+        <ul>
+          <li><strong>Metals:</strong> ferrous and non-ferrous, starting with aluminium and moving to copper, bronze, manganese alloys and more, with the alloy treated as a process parameter.</li>
+          <li><strong>Recommendations:</strong> gating system and mould design, metal velocity, pouring temperature and mould temperature.</li>
+          <li><strong>Outcomes:</strong> fewer shrinkage, porosity and blow-hole defects; less scrap and remelting; savings in energy, time and money.</li>
+        </ul>
+
+        <h2>Where we actually are today</h2>
+        <p>It is easy to over-promise in this field, so here is the honest version. Our first step is <a href="lm6-castbench-dataset.html">LM6-CastBench</a>, an open dataset of 450 simulated LM6 aluminium sand-casting cases, accepted at the NeurIPS 2026 AIDaR Workshop. On it, a <a href="mlp-vs-unet.html">3D U-Net cut the temperature error sharply</a> compared with a point-wise network, from 80.7 K to 1.9 K on the stepped block.</p>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/unet-predictions.jpg" alt="3D U-Net predictions on unseen casting geometries">
+          <figcaption><b>Where we started.</b> 3D U-Net predictions against simulation on geometries it never saw in training. Source: LM6-CastBench paper, Figure 3b.</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Today</th><th>Next</th></tr></thead>
+            <tbody>
+              <tr><td>Aluminium LM6 only</td><td>Bronze, copper, other Al alloys, ferrous</td></tr>
+              <tr><td>Conduction-based thermal model</td><td>Mould filling coupled with solidification</td></tr>
+              <tr><td>Pouring and mould temperature varied</td><td>Gating and riser variations</td></tr>
+              <tr><td>No direct defect prediction</td><td>Links to shrinkage and porosity</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>The honest gap</h2>
+        <blockquote>Models are only convincing once they meet real castings. That is the step we cannot take alone.</blockquote>
+        <p>We need to check predictions against real pours, learn which defects and parameters matter most in practice, and make sure the tool fits how foundries actually work. If you run a foundry or work in one, these are the questions we would love your answers to:</p>
+        <ol>
+          <li>Which casting defects hurt you the most today?</li>
+          <li>Which process settings are hardest to get right on a new pattern?</li>
+          <li>Where on the floor would a recommendation tool actually help?</li>
+          <li>What would you need to see before trusting a model?</li>
+        </ol>
+        <p>Write to us through the <a href="../contact.html">contact page</a> or at <a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a>. Even a short reply helps us build the right thing.</p>
+
+      </article>
+
+      <div class="article-end">
+        <div class="author">
+          <div class="avatar" aria-hidden="true"></div>
+          <div><b>Suhani Kolhatkar</b><span>ValidusCast · COEP Technological University</span></div>
+        </div>
+        <a class="next-post" href="lm6-castbench-dataset.html"><span>Start from the beginning</span><b>How we built LM6-CastBench: 450 sand-casting simulations, one pipeline →</b></a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="legal" style="margin-top:0; border-top:0; padding-top:0;"><span>© <span data-year>2026</span> ValidusCast · Kothrud, Pune, India</span><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — ValidusCast</title>
+  <meta name="description" content="Get in touch with ValidusCast, Kothrud, Pune, India.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="page-fixed contact-body">
+
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="index.html"><img src="assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="blogs.html">Blogs</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="contact">
+    <!-- Left: FNO-predicted thermal field (Cool to Warm) -->
+    <div class="contact-visual">
+      <video autoplay muted loop playsinline preload="auto" poster="assets/img/fno-field.jpg" aria-hidden="true">
+        <source src="assets/video/fno-field.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Right: contact card -->
+    <div class="contact-panel">
+      <div class="contact-card">
+        <div class="eyebrow"><span class="dot"></span>Contact</div>
+        <h1>We would love to hear from you</h1>
+        <p>Foundries, researchers, investors and students: tell us what you are working on.</p>
+
+        <!-- Works without JavaScript too (falls back to a normal POST to FormSubmit). -->
+        <form id="contact-form" action="https://formsubmit.co/validuscast@gmail.com" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="New message from validuscast.github.io">
+          <input type="hidden" name="_next" value="https://validuscast.github.io/contact.html?sent=1">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+          </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" placeholder="How can we help?" required></textarea>
+          </div>
+          <div class="form-row">
+            <button class="btn btn--solid" type="submit">Send message <span class="arrow">→</span></button>
+            <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+          </div>
+        </form>
+
+        <div class="contact-lines">
+          <div><span>Email</span><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></div>
+          <div><span>Address</span>Kothrud, Pune, India</div>
+          <div><span>YouTube</span><a href="https://www.youtube.com/@validuscast" target="_blank" rel="noopener">@validuscast</a></div>
+          <div><span>GitHub</span><a href="https://github.com/validuscast" target="_blank" rel="noopener">github.com/validuscast</a></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/contact.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How we built LM6-CastBench: 450 sand-casting simulations, one pipeline — ValidusCast</title>
+  <meta name="description" content="From parametric CAD to Elmer FEM to PyTorch tensors: how we generated an open, geometry-aware thermal dataset for LM6 aluminium sand casting.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/blog.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="../index.html"><img src="../assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../demo.html">Demo</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="article">
+    <div class="container">
+
+      <header class="article-header">
+        <a class="article-back" href="../blogs.html">← All posts</a>
+        <div class="eyebrow"><span class="dot"></span>Dataset · Simulation</div>
+        <h1>How we built LM6-CastBench: 450 sand-casting simulations, one pipeline</h1>
+        <p class="subtitle">From a parametric CAD sketch to a PyTorch tensor, without ever losing track of which temperature belongs to which geometry.</p>
+        <div class="article-meta">
+          <span>By <b>Suhani Kolhatkar</b></span>
+          <span>2 Oct 2026</span>
+          <span>8 min read</span>
+        </div>
+      </header>
+
+      <figure class="article-cover">
+        <img src="../assets/img/blog/cover-dataset.jpg" alt="Temperature fields of casting geometries in Cool to Warm colours">
+      </figure>
+
+      <article class="prose">
+
+        <p>In our manufacturing processes course we learn that a good casting engineer can “see” where a part will solidify last. Thick sections stay hot, thin sections freeze first, and if the hot spot is cut off from the feeder you get shrinkage. It sounds simple until you try to put a number on it for a part you have never poured before.</p>
+
+        <p>Finite-element simulation can put that number on it. The catch is that every new geometry and every new pouring temperature is a fresh solve. That is exactly the kind of repetitive, expensive computation machine learning is supposed to help with, so I went looking for an open dataset to train on. I could not find one that I could actually use, so we built one. This post is the story of how.</p>
+
+        <h2>The gap we kept running into</h2>
+        <p>Some earlier work learned casting temperatures from simulation, but each study used its own private database. Some used procedurally generated 2D shapes stored as images; others kept the real finite-element temperatures but varied only the pouring temperature on one fixed part. What was missing was a benchmark where <strong>3D geometry and process conditions are both varied in a controlled way</strong>, and where the mesh and the full transient field are still there when you open the files.</p>
+
+        <blockquote>A temperature value without its spatial context is not enough to study how geometry affects prediction. Geometry without its transient field gives you nothing to learn.</blockquote>
+
+        <h2>Step 1 — Three families, ten variants each</h2>
+        <p>We picked three geometry families that every mechanical student will recognise from a casting drawing: a <strong>brake lever</strong>, a <strong>flange</strong> and a <strong>stepped block</strong>. Each family is a parametric CAD model with a fixed topology. The flange, for example, is driven by its outer diameter (80–140 mm), base thickness (10–25 mm), bore ratio, boss-wall thickness, boss height and taper, and bolt-hole diameter, with four bolt holes on the bolt circle.</p>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/cad-parametrization.jpg" alt="Parametrization sketches and ten variants for stepped block, flange and brake lever">
+          <figcaption><b>Parametric families.</b> Design variables for the stepped block, flange and brake lever, and the ten generated variants of each. Source: LM6-CastBench paper, Figure 4.</figcaption>
+        </figure>
+
+        <p>Instead of a full factorial design (which explodes very quickly), we sampled the design parameters with <strong>Latin Hypercube Sampling</strong>. LHS spreads ten samples across the whole parameter space while keeping the variants recognisably “the same part”. The brake lever was the trickiest: we moved three anchor points and dragged every other sketch point along using inverse-distance-weighted interpolation, so originally coincident points stay coincident and the sketch never breaks.</p>
+
+        <h3>Why every variant gets its own mesh</h3>
+        <p>A shortcut would have been to morph one base mesh into all ten shapes. We did not. Each STEP file is meshed independently with first-order tetrahedra (Frontal-Delaunay on the surface, HXT in the volume), with local refinement around holes, fillets and curved features. We kept the quality metrics in a target band (SICN 0.87–0.90, Gamma 0.80–0.90) for every variant. That way the temperature field always sits on the mesh that actually belongs to that geometry.</p>
+
+        <h2>Step 2 — The same process grid for every part</h2>
+        <p>Every variant sees exactly the same process conditions: five pouring temperatures (953, 973, 993, 1013 and 1033 K) and three mould temperatures (303, 353 and 403 K). That is 15 cases per variant and</p>
+
+        <div class="equation">3 families × 10 variants × 15 conditions = 450 simulation cases</div>
+
+        <p>Keeping the grid identical separates process variation from geometry variation, which matters later when you want to ask questions like “is the model bad on the flange, or bad at high pouring temperatures?”</p>
+
+        <h2>Step 3 — Solving the thermal problem in Elmer FEM</h2>
+        <p>The transient solve uses the open-source <strong>Elmer FEM</strong> solver with an enthalpy-based phase-change formulation, BDF2 time integration and a temperature-dependent convective boundary condition between casting and mould. LM6 (Al–Si12) properties such as specific heat and conductivity are temperature dependent; from the enthalpy table, the effective solidus and liquidus come out at roughly 850 K and 886 K.</p>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/lm6-workflow.jpg" alt="Workflow: parametric CAD, LHS, meshing, Elmer simulation, post-processing">
+          <figcaption><b>End-to-end workflow.</b> Parametric CAD and LHS → independent meshing → Elmer FEM transient solve → field extraction and dataset construction in Python. Source: LM6-CastBench paper, Figure 1.</figcaption>
+        </figure>
+
+        <p>One detail that taught me a lot about solver practice: the time step is not constant. Early in the transient, when the temperature changes fastest, we take 0.1 s steps; later we coarsen to 0.5, 2 and finally 20 s steps. A single fixed step would either waste hours at the end or miss the physics at the start.</p>
+
+        <div class="callout"><strong>Honest scope</strong>The model is conduction-dominated. It does not simulate mould filling or metal flow, and it does not predict defects directly. It targets the transient temperature field, which is the first thing defect formation depends on.</div>
+
+        <h2>Step 4 — Keeping geometry and temperature together</h2>
+        <p>This is the part I am proudest of, even though it is the least glamorous. For each case the released data keeps the node coordinates, mesh connectivity, signed-distance values, process parameters and time-resolved nodal temperatures, plus a metadata record linking the case ID to its CAD, mesh and field files and to its train/val/test split.</p>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/lm6-modalities.jpg" alt="CAD, mesh, voxel grid and temperature snapshots for each family">
+          <figcaption><b>Data modalities.</b> For every family: CAD geometry, tetrahedral mesh, voxelised occupancy grid and simulated temperature snapshots. Source: LM6-CastBench paper, Figure 2.</figcaption>
+        </figure>
+
+        <h3>Splitting by geometry, not by time step</h3>
+        <p>If you shuffle individual time steps into train and test sets, the model will happily “predict” a part it has already seen a second earlier. So we split at the geometry-variant level: 8 variants per family for training, 1 for validation and 1 for testing. Three held-out test geometries is a small test set, and we say so clearly in the paper; the split seed (42) and manifest are released so anyone can reproduce or extend it.</p>
+
+        <h2>What I would tell a classmate starting a similar project</h2>
+        <ul>
+          <li><strong>Design the data before you run the solver.</strong> Decide how each case will be identified and stored on day one.</li>
+          <li><strong>Mesh each geometry on its own.</strong> Morphing is faster but hides geometry-specific detail.</li>
+          <li><strong>Write down what your model does not do.</strong> Ours does not simulate filling. Saying it early saves arguments later.</li>
+          <li><strong>Split by part.</strong> Anything else measures memory, not generalisation.</li>
+        </ul>
+
+        <p>All 450 cases are released as preprocessed PyTorch tensors together with the generation and benchmark scripts, under CC-BY-4.0, on <a href="https://github.com/SuhaniKolhatkar/LM6-CastBench" target="_blank" rel="noopener">GitHub</a>. In the next post I look at what happens when we actually train models on it, and why one of them has about 40 times lower error on the stepped block.</p>
+
+      </article>
+
+      <div class="article-end">
+        <div class="author">
+          <div class="avatar" aria-hidden="true"></div>
+          <div><b>Suhani Kolhatkar</b><span>ValidusCast · COEP Technological University</span></div>
+        </div>
+        <a class="next-post" href="mlp-vs-unet.html"><span>Next post</span><b>Does a neural network need to see the neighbours? MLP vs 3D U-Net →</b></a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="legal" style="margin-top:0; border-top:0; padding-top:0;"><span>© <span data-year>2026</span> ValidusCast · Kothrud, Pune, India</span><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

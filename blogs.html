@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blogs — ValidusCast</title>
+  <meta name="description" content="Technical writing and videos from ValidusCast on casting simulation, datasets and physics-based machine learning.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="index.html"><img src="assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="page-head container">
+      <div class="eyebrow reveal"><span class="dot"></span>Blogs</div>
+      <h1 class="reveal">Notes from the lab.</h1>
+      <p class="reveal">What we are learning while building physics foundation models for casting: datasets, simulations, benchmarks and the honest gaps in between.</p>
+      <nav class="subnav reveal" aria-label="Blog sections">
+        <a href="#writing">Writing</a>
+        <a href="#videos">Videos</a>
+      </nav>
+    </section>
+
+    <!-- =====================================================================
+         1) WRITING — written blog posts
+         To add a post: copy one <a class="post-card"> … </a> block, paste it at
+         the TOP of the list, and change the link, image, tag, date, title and
+         excerpt. Create the post itself from blog/_template.html.
+         ===================================================================== -->
+    <section class="section" id="writing" style="border-top:0; padding-top: 24px;">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">01 — Writing</div>
+          <h2>Technical blogs</h2>
+        </div>
+
+        <div class="post-list">
+
+          <a class="post-card reveal" href="blog/foundation-models-for-casting.html">
+            <div class="thumb dark"><img src="assets/img/blog/cover-foundation.jpg" alt=""></div>
+            <div>
+              <div class="meta"><span>Perspective · Foundries</span><span>14 Oct 2026</span><span>6 min read</span></div>
+              <h3>Why foundries still get it right on the third pour, and what a foundation model could change</h3>
+              <p>Defects, trial and error and remelting: the problem as we see it, what a casting foundation model should recommend, and the gap we cannot close without real castings.</p>
+              <span class="read">Read post <span class="arrow">→</span></span>
+            </div>
+          </a>
+
+          <a class="post-card reveal" href="blog/mlp-vs-unet.html">
+            <div class="thumb dark"><img src="assets/img/blog/cover-benchmark.jpg" alt=""></div>
+            <div>
+              <div class="meta"><span>Machine learning · Benchmark</span><span>9 Oct 2026</span><span>7 min read</span></div>
+              <h3>Does a neural network need to see the neighbours? MLP vs 3D U-Net on casting temperatures</h3>
+              <p>Same data, same geometry-level split. On the unseen stepped block, giving the model spatial context drops the mean error from 80.7 K to 1.9 K.</p>
+              <span class="read">Read post <span class="arrow">→</span></span>
+            </div>
+          </a>
+
+          <a class="post-card reveal" href="blog/lm6-castbench-dataset.html">
+            <div class="thumb dark"><img src="assets/img/blog/cover-dataset.jpg" alt=""></div>
+            <div>
+              <div class="meta"><span>Dataset · Simulation</span><span>2 Oct 2026</span><span>8 min read</span></div>
+              <h3>How we built LM6-CastBench: 450 sand-casting simulations, one pipeline</h3>
+              <p>Parametric CAD, Latin Hypercube Sampling, independent meshing and Elmer FEM: how we built an open thermal dataset that never separates a temperature field from its geometry.</p>
+              <span class="read">Read post <span class="arrow">→</span></span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Break block: simulation imagery -->
+    <figure class="break">
+      <img src="assets/img/break-timeline.jpg" alt="A casting section cooling over time, shown as a sequence of temperature fields">
+      <figcaption><span>One casting section, five moments in time · conduction–solidification</span><span class="scale">Cool <i></i> Warm</span></figcaption>
+    </figure>
+
+    <!-- =====================================================================
+         2) VIDEOS — YouTube
+         Thumbnails are generated from the list in assets/js/youtube.js.
+         Add your video ids there; no changes needed in this file.
+         ===================================================================== -->
+    <section class="section" id="videos">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">02 — Videos</div>
+          <h2>On our YouTube channel</h2>
+        </div>
+
+        <div id="video-grid" class="video-grid"></div>
+
+        <p style="margin-top: 40px;"><a class="btn btn--ghost" href="https://www.youtube.com/@validuscast" target="_blank" rel="noopener">Visit @validuscast on YouTube <span class="arrow">↗</span></a></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="grid">
+        <div>
+          <a class="brand" href="index.html"><img src="assets/img/logo-white.png" alt="">ValidusCast</a>
+          <p style="max-width: 320px; margin-top: 16px;">Physics foundation models for the metal casting industry.</p>
+        </div>
+        <div><h5>Company</h5><ul><li><a href="about.html">About</a></li><li><a href="demo.html">Demo</a></li><li><a href="blogs.html">Blogs</a></li></ul></div>
+        <div><h5>Connect</h5><ul><li><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></li><li><a href="https://www.youtube.com/@validuscast" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://github.com/validuscast" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+        <div><h5>Location</h5><ul><li>Kothrud, Pune</li><li>Maharashtra, India</li></ul></div>
+      </div>
+      <div class="legal"><span>© <span data-year>2026</span> ValidusCast</span><span>Pune, India</span></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/youtube.js"></script>
+</body>
+</html>

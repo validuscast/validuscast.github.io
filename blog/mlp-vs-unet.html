@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Does a neural network need to see the neighbours? MLP vs 3D U-Net — ValidusCast</title>
+  <meta name="description" content="Benchmarking a point-wise MLP against a 3D U-Net on unseen casting geometries from LM6-CastBench, and what the errors tell us about geometry context.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/blog.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="../index.html"><img src="../assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../demo.html">Demo</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="article">
+    <div class="container">
+
+      <header class="article-header">
+        <a class="article-back" href="../blogs.html">← All posts</a>
+        <div class="eyebrow"><span class="dot"></span>Machine learning · Benchmark</div>
+        <h1>Does a neural network need to see the neighbours? MLP vs 3D U-Net on casting temperatures</h1>
+        <p class="subtitle">Same data, same split, two very different ways of looking at a part. On the stepped block, the error drops from 80.7 K to 1.9 K.</p>
+        <div class="article-meta">
+          <span>By <b>Suhani Kolhatkar</b></span>
+          <span>9 Oct 2026</span>
+          <span>7 min read</span>
+        </div>
+      </header>
+
+      <figure class="article-cover">
+        <img src="../assets/img/blog/cover-benchmark.jpg" alt="Predicted temperature fields shown in Cool to Warm colours">
+      </figure>
+
+      <article class="prose">
+
+        <p>In heat transfer class we write the conduction equation once and then spend weeks on what it implies: heat flows from hot to cold, and what happens at a point depends on what is happening <em>around</em> it. That second idea is the whole reason this benchmark exists.</p>
+
+        <p>Once <a href="lm6-castbench-dataset.html">LM6-CastBench</a> was ready, we wanted to test a simple question. If you give a neural network the coordinates of a point, the pouring and mould temperatures and the time, can it predict the temperature at that point? Or does it need to see the shape around that point to do it properly?</p>
+
+        <h2>The physics we are asking the models to learn</h2>
+        <p>Inside the casting, the simulation solves the enthalpy-based heat equation, where the effective heat capacity also carries the latent heat released during solidification:</p>
+
+        <div class="equation">ρ c<sub>eff</sub>(T) ∂T/∂t = ∇ · [ k(T) ∇T ]</div>
+
+        <p>At the casting–mould boundary there is a temperature-dependent convective condition. None of this is given to the networks. They only see examples of inputs and the resulting temperature fields.</p>
+
+        <h2>Two models, two views of the part</h2>
+
+        <h3>Point-wise MLP: every node on its own</h3>
+        <p>The MLP takes seven numbers for each mesh node: X, Y, Z, the signed distance to the surface, T<sub>pour</sub>, T<sub>mould</sub> and time. It passes them through three hidden layers (128, 128, 64 neurons, about 26 k parameters) and outputs one temperature. It never sees the node next door. It works directly at the exact node positions, which is an advantage we will come back to.</p>
+
+        <h3>3D U-Net: the whole neighbourhood at once</h3>
+        <p>The U-Net works on a 32 × 32 × 32 voxel grid. Its input channels are occupancy, signed distance, T<sub>pour</sub>, T<sub>mould</sub> and time, and it outputs the full 3D temperature field, which we map back to the FEM nodes for evaluation. With three down-sampling stages, a bottleneck and skip connections at every level, it has about 1.4 M parameters. Every prediction is made with the surrounding geometry in view.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th></th><th>Point-wise MLP</th><th>3D U-Net</th></tr></thead>
+            <tbody>
+              <tr><td>Representation</td><td>FEM nodes</td><td>32³ voxel grid</td></tr>
+              <tr><td>Input</td><td>X, Y, Z, SDF, T<sub>pour</sub>, T<sub>mould</sub>, t</td><td>Occupancy, SDF, T<sub>pour</sub>, T<sub>mould</sub>, t</td></tr>
+              <tr><td>Output</td><td>Nodal temperature</td><td>3D temperature field</td></tr>
+              <tr><td>Parameters</td><td>25,857</td><td>1,402,289</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Both were trained with MSE loss and Adam (learning rate 10<sup>−3</sup>, 50 epochs) on a Kaggle T4, and both were tested on the same held-out geometry variants, parts the networks had never seen.</p>
+
+        <h2>The results</h2>
+        <p>Here is the mean absolute temperature error on the unseen geometries. Lower is better.</p>
+
+        <div class="bars" role="img" aria-label="Mean absolute error in kelvin: brake 8.38 MLP vs 2.19 U-Net; flange 36.75 vs 1.03; stepped block 80.71 vs 1.86">
+          <div class="group">
+            <div class="gname">Brake lever</div>
+            <div class="row"><span class="lbl">MLP</span><div class="track"><div class="fill mlp" style="width:10.4%"></div></div><span class="val">8.38 K</span></div>
+            <div class="row"><span class="lbl">3D U-Net</span><div class="track"><div class="fill unet" style="width:2.7%"></div></div><span class="val">2.19 K</span></div>
+          </div>
+          <div class="group">
+            <div class="gname">Flange</div>
+            <div class="row"><span class="lbl">MLP</span><div class="track"><div class="fill mlp" style="width:45.5%"></div></div><span class="val">36.75 K</span></div>
+            <div class="row"><span class="lbl">3D U-Net</span><div class="track"><div class="fill unet" style="width:1.3%"></div></div><span class="val">1.03 K</span></div>
+          </div>
+          <div class="group">
+            <div class="gname">Stepped block</div>
+            <div class="row"><span class="lbl">MLP</span><div class="track"><div class="fill mlp" style="width:100%"></div></div><span class="val">80.71 K</span></div>
+            <div class="row"><span class="lbl">3D U-Net</span><div class="track"><div class="fill unet" style="width:2.3%"></div></div><span class="val">1.86 K</span></div>
+          </div>
+          <div class="legend"><span><i style="background:var(--warm)"></i>Point-wise MLP</span><span><i style="background:var(--cool)"></i>3D U-Net</span></div>
+        </div>
+
+        <p>On the brake lever the improvement is modest. On the flange and the stepped block it is dramatic: the U-Net’s error on the stepped block is roughly 40 times lower. The 95th-percentile error follows the same pattern (112.1 K down to 5.1 K on the stepped block), so this is not one lucky average.</p>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/mlp-predictions.jpg" alt="MLP target vs predicted temperature for best, median and worst cases">
+          <figcaption><b>Point-wise MLP.</b> Target versus predicted temperature on unseen geometries, best, median and worst cases. Source: LM6-CastBench paper, Figure 3a.</figcaption>
+        </figure>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/unet-predictions.jpg" alt="U-Net target vs predicted temperature for best, median and worst cases">
+          <figcaption><b>3D U-Net.</b> The same cases. Even the worst case follows the simulated field closely. Source: LM6-CastBench paper, Figure 3b.</figcaption>
+        </figure>
+
+        <h2>Why the MLP struggles exactly where a casting engineer would expect</h2>
+        <p>Look at where the MLP goes wrong: around the flange ring and its bolt holes, and at the cross-section changes of the stepped block. These are the places where the temperature at a point depends heavily on how much hot metal is nearby. A thick step next to a thin one cools differently from either on its own. The MLP has no way of knowing that from a single point’s coordinates and signed distance. The U-Net sees the neighbourhood and gets it right.</p>
+
+        <blockquote>Shape context matters for thermal prediction, most of all where the geometry has holes and abrupt section changes.</blockquote>
+
+        <figure class="wide paper">
+          <img src="../assets/img/blog/errors-stepped.jpg" alt="Error over time for the stepped block, MLP vs U-Net">
+          <figcaption><b>Error over time, stepped block.</b> Mean and max absolute error through the transient for the MLP (top) and U-Net (bottom). Source: LM6-CastBench paper, Appendix C.</figcaption>
+        </figure>
+
+        <h2>The trade-offs we report openly</h2>
+        <ul>
+          <li><strong>Speed.</strong> The MLP is faster at inference (0.5–1.2 s per case versus 2.7–8.0 s for the U-Net, including voxelisation).</li>
+          <li><strong>Resolution floor.</strong> The U-Net predicts on a 32³ grid, so mesh nodes that share a voxel get the same temperature. Even a perfect U-Net has a quantisation floor; the MLP does not.</li>
+          <li><strong>Small test set.</strong> Three held-out geometries is enough to show a clear trend, not to make statistical claims.</li>
+        </ul>
+
+        <h2>What comes next</h2>
+        <p>The point of the benchmark is not that a U-Net is the answer. It is that geometry context clearly matters, and that we now have a fixed, reproducible setup to test models that handle geometry more naturally: graph networks that work on the mesh itself, neural operators such as Fourier Neural Operators that are not tied to one grid resolution, and physics-informed models. Those are the experiments we are running now, and they will be the subject of the next posts.</p>
+
+      </article>
+
+      <div class="article-end">
+        <div class="author">
+          <div class="avatar" aria-hidden="true"></div>
+          <div><b>Suhani Kolhatkar</b><span>ValidusCast · COEP Technological University</span></div>
+        </div>
+        <a class="next-post" href="foundation-models-for-casting.html"><span>Next post</span><b>Why foundries still get it right on the third pour, and what a foundation model could change →</b></a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="legal" style="margin-top:0; border-top:0; padding-top:0;"><span>© <span data-year>2026</span> ValidusCast · Kothrud, Pune, India</span><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

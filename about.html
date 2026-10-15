@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About — ValidusCast</title>
+  <meta name="description" content="Vision, mission and achievements of ValidusCast, a Pune-based deep-tech startup building physics foundation models for metal casting.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container">
+      <a class="brand" href="index.html"><img src="assets/img/logo-white.png" alt="">ValidusCast</a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html" aria-current="page">About</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="blogs.html">Blogs</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="page-head container">
+      <div class="eyebrow reveal"><span class="dot"></span>About ValidusCast</div>
+      <h1 class="reveal">A casting is often right only after a few wrong ones.</h1>
+      <p class="reveal">Shrinkage, porosity and blow holes are still found the expensive way: by pouring metal, cutting the part open and trying again. Every rejected casting is metal, energy and time already spent. We are building models that learn the physics of solidification from data, so the right design and process settings can be chosen before the first pour.</p>
+    </section>
+
+    <!-- Break block: simulation imagery -->
+    <figure class="break">
+      <img src="assets/img/break-flow.jpg" alt="Simulated molten metal filling a turbine-blade investment shell, coloured by temperature">
+      <figcaption><span>Metal filling a turbine-blade investment shell, shown lying on its side · temperature field</span><span class="scale">300 K <i></i> 1800 K</span></figcaption>
+    </figure>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">01 — Direction</div>
+          <h2>Vision &amp; mission</h2>
+        </div>
+        <div class="split reveal">
+          <div>
+            <h3>Vision</h3>
+            <p class="statement">A foundation model for metal casting: one family of models that understands how any metal fills, cools and solidifies in any mould, across geometries, alloys and process conditions.</p>
+          </div>
+          <div>
+            <h3>Mission</h3>
+            <p class="statement">Help foundries cut trial pours, scrap and remelting by recommending gating and mould design, metal velocity, and pouring and mould temperatures before production begins.</p>
+          </div>
+        </div>
+
+        <div class="cols-3 reveal" style="margin-top: 1px; border-top: 0;">
+          <div>
+            <div class="num">A</div>
+            <h4>Learn from physics</h4>
+            <p>We train on carefully generated simulation data where geometry, mesh, process settings and transient temperature fields stay linked, case by case.</p>
+          </div>
+          <div>
+            <div class="num">B</div>
+            <h4>Cover many metals</h4>
+            <p>Starting with aluminium LM6 and moving to other aluminium alloys, copper, bronze and ferrous metals, with the alloy treated as one more process parameter.</p>
+          </div>
+          <div>
+            <div class="num">C</div>
+            <h4>Work with simulation</h4>
+            <p>Tools such as MAGMASOFT, ProCAST and POLYGONSOFT show what happens in a design you already have. We aim to help choose a good design to begin with.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Break block: simulation imagery -->
+    <figure class="break">
+      <img src="assets/img/break-thermal.jpg" alt="Conduction-solidification temperature fields of casting sections in a mould">
+      <figcaption><span>Conduction–solidification fields of casting sections cooling in a mould</span><span class="scale">Cool <i></i> Warm</span></figcaption>
+    </figure>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">02 — Achievements</div>
+          <h2>Recognition for our first open benchmark</h2>
+        </div>
+
+        <div class="achv reveal">
+          <div>
+            <span class="tag"><i></i>Accepted · NeurIPS 2026 Workshop</span>
+            <h3>“LM6-CastBench: A Geometry-Aware Simulation Dataset for Transient Thermal Prediction in LM6 Sand Casting”</h3>
+            <p>Our paper has been accepted for a poster presentation at the AIDaR Workshop (AI Data Readiness for Scientific Discovery) at NeurIPS 2026, taking place on December 12 in Paris.</p>
+            <p>LM6-CastBench is an open simulation dataset for geometry-aware learning of transient thermal fields in LM6 aluminium sand casting. Each case keeps its CAD geometry, mesh, process settings and time-resolved temperatures together, with fixed geometry-level splits so new models can be compared fairly.</p>
+            <p style="margin-top: 22px;"><a class="textlink" href="https://github.com/SuhaniKolhatkar/LM6-CastBench" target="_blank" rel="noopener">Dataset &amp; code on GitHub (CC-BY-4.0) ↗</a>&nbsp;&nbsp;&nbsp;<a class="textlink" href="blog/lm6-castbench-dataset.html">Read the story →</a></p>
+            <div class="facts">
+              <div><span>Venue</span><b>NeurIPS 2026 · AIDaR</b></div>
+              <div><span>Format</span><b>Poster</b></div>
+              <div><span>Date</span><b>12 Dec · Paris</b></div>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><b>450</b><span>geometry–process simulation cases · 3 families × 10 variants × 15 process conditions</span></div>
+            <div class="metric"><b>80.7 → 1.9 K</b><span>mean absolute temperature error on the held-out stepped block, point-wise MLP → 3D U-Net</span></div>
+            <div class="metric"><b>Open</b><span>CAD, meshes, fields, split manifest and benchmark scripts released for reproducible research</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">03 — Next</div>
+          <h2>Models are only convincing once they meet real castings.</h2>
+        </div>
+        <div class="cols-3 reveal">
+          <div>
+            <div class="num">Today</div>
+            <h4>LM6, conduction</h4>
+            <p>Aluminium LM6 with a conduction-based thermal model, varying pouring and mould temperature. Mould filling and direct defect prediction are not yet included.</p>
+          </div>
+          <div>
+            <div class="num">Next</div>
+            <h4>More physics, more metals</h4>
+            <p>Bronze, copper, other aluminium alloys and ferrous metals; gating and riser variations; mould filling coupled with solidification; links to shrinkage and porosity.</p>
+          </div>
+          <div>
+            <div class="num">With foundries</div>
+            <h4>Validation on real pours</h4>
+            <p>Checking predictions against real castings and learning which defects and parameters matter most on the shop floor. <a class="textlink" href="contact.html">Talk to us →</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="grid">
+        <div>
+          <a class="brand" href="index.html"><img src="assets/img/logo-white.png" alt="">ValidusCast</a>
+          <p style="max-width: 320px; margin-top: 16px;">Physics foundation models for the metal casting industry.</p>
+        </div>
+        <div><h5>Company</h5><ul><li><a href="about.html">About</a></li><li><a href="demo.html">Demo</a></li><li><a href="blogs.html">Blogs</a></li></ul></div>
+        <div><h5>Connect</h5><ul><li><a href="mailto:validuscast@gmail.com">validuscast@gmail.com</a></li><li><a href="https://www.youtube.com/@validuscast" target="_blank" rel="noopener">YouTube</a></li><li><a href="https://github.com/validuscast" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+        <div><h5>Location</h5><ul><li>Kothrud, Pune</li><li>Maharashtra, India</li></ul></div>
+      </div>
+      <div class="legal"><span>© <span data-year>2026</span> ValidusCast</span><span>Pune, India</span></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+/* ==========================================================================
+   ValidusCast — blog article styles (used by every page in /blog)
+   Everything is left-aligned: title, subheadings, paragraphs, media.
+   ========================================================================== */
+
+.article { padding: calc(var(--nav-h) + clamp(48px, 9vh, 104px)) 0 clamp(72px, 10vh, 120px); }
+.article .container { max-width: var(--maxw); }
+
+.article-header { max-width: 860px; text-align: left; margin-bottom: clamp(40px, 6vh, 64px); }
+.article-back { display: inline-flex; gap: 8px; font-family: var(--font-display); font-size: 14px; color: var(--muted); margin-bottom: 36px; transition: color .2s; }
+.article-back:hover { color: #fff; }
+.article-header .eyebrow { margin-bottom: 18px; }
+.article-header h1 { font-size: clamp(34px, 4.6vw, 64px); letter-spacing: -0.035em; line-height: 1.04; text-align: left; }
+.article-header .subtitle { font-size: clamp(18px, 1.6vw, 22px); color: var(--fg-2); line-height: 1.45; margin: 22px 0 0; max-width: 720px; text-align: left; }
+.article-meta { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.article-meta b { color: var(--fg); font-weight: 500; }
+
+/* Cover — full-width image or video right below the header */
+.article-cover { margin: 0 0 clamp(40px, 6vh, 64px); border: 1px solid var(--line); background: #000; }
+.article-cover img, .article-cover video { width: 100%; height: auto; max-height: 560px; object-fit: cover; }
+
+/* Body column (left aligned, readable width) */
+.prose { max-width: 720px; text-align: left; font-size: 17.5px; line-height: 1.75; color: #e6e6e6; }
+.prose > * { margin-top: 0; margin-bottom: 0; }
+.prose > * + * { margin-top: 1.15em; }
+.prose h2 { font-size: clamp(26px, 2.4vw, 34px); color: #fff; margin-top: 2.4em; margin-bottom: .2em; line-height: 1.15; text-align: left; }
+.prose h3 { font-size: clamp(20px, 1.7vw, 23px); color: #fff; margin-top: 2em; margin-bottom: .1em; line-height: 1.25; text-align: left; font-weight: 500; }
+.prose > h2 + p, .prose > h3 + p { margin-top: .7em; }
+.prose a { color: #fff; border-bottom: 1px solid rgba(255,255,255,.4); }
+.prose a:hover { border-color: #fff; }
+.prose strong { color: #fff; font-weight: 500; }
+.prose ul, .prose ol { padding-left: 1.2em; }
+.prose li + li { margin-top: .45em; }
+.prose li::marker { color: var(--muted); }
+.prose code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86em; background: #111; border: 1px solid var(--line-2); padding: .12em .4em; border-radius: 4px; }
+.prose pre { background: #0b0b0b; border: 1px solid var(--line-2); padding: 18px 20px; overflow-x: auto; font-size: 14px; line-height: 1.6; border-radius: 6px; }
+.prose pre code { background: none; border: 0; padding: 0; }
+.prose hr { border: 0; height: 1px; background: var(--line-2); margin: 2.6em 0; }
+
+.prose blockquote, .callout {
+  margin-left: 0; padding: 4px 0 4px 22px; border-left: 2px solid; border-image: linear-gradient(180deg, var(--cool), var(--warm)) 1;
+  color: #fff; font-family: var(--font-display); font-size: 1.15em; line-height: 1.5;
+}
+.callout { font-family: var(--font-body); font-size: 1em; color: #e6e6e6; }
+.callout strong { display: block; font-family: var(--font-display); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+
+.equation { font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 1.15em; padding: 18px 22px; background: #0b0b0b; border: 1px solid var(--line-2); overflow-x: auto; white-space: nowrap; }
+
+/* Media blocks inside the article: image, video, YouTube embed.
+   Use .wide on a figure to let it extend beyond the text column. */
+.prose > figure { margin-top: 2em; margin-bottom: 2em; }
+.prose > figure + p, .prose > figure + div { margin-top: 0; }
+.prose figure.wide { max-width: min(1000px, calc(100vw - 2 * var(--gutter))); width: 1000px; }
+.prose figure img, .prose figure video { width: 100%; height: auto; border: 1px solid var(--line); }
+.prose figure.paper img { background: #fff; padding: 14px; }        /* white-background paper figures */
+.prose figcaption { font-size: 13.5px; color: var(--muted); margin-top: 12px; line-height: 1.55; text-align: left; }
+.prose figcaption b { color: var(--fg-2); font-weight: 500; }
+.embed { position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--line); background: #0b0b0b; }
+.embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); }
+.prose table { border-collapse: collapse; width: 100%; font-size: 14.5px; line-height: 1.4; }
+.prose th, .prose td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.prose th { font-family: var(--font-display); font-weight: 500; color: var(--muted); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; background: #070707; }
+.prose tr:last-child td { border-bottom: 0; }
+.prose td.hl { color: #fff; font-weight: 500; }
+
+/* Simple horizontal bar chart (HTML/CSS) */
+.bars { border: 1px solid var(--line); padding: 22px 22px 18px; }
+.bars .row { display: grid; grid-template-columns: 120px 1fr 64px; gap: 14px; align-items: center; font-size: 14px; margin: 10px 0; }
+.bars .row .lbl { color: var(--fg-2); }
+.bars .track { height: 10px; background: #111; position: relative; }
+.bars .fill { position: absolute; inset: 0 auto 0 0; }
+.bars .fill.mlp { background: var(--warm); }
+.bars .fill.unet { background: var(--cool); }
+.bars .val { text-align: right; font-family: var(--font-display); color: #fff; }
+.bars .group { padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.bars .group:last-of-type { border-bottom: 0; }
+.bars .gname { font-family: var(--font-display); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.bars .legend { display: flex; gap: 20px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.bars .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 8px; vertical-align: -1px; }
+
+/* Author box + next post */
+.article-end { max-width: 720px; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); display: grid; gap: 28px; }
+.author { display: flex; gap: 16px; align-items: center; }
+.author .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--coolwarm); flex: none; }
+.author b { display: block; font-family: var(--font-display); font-weight: 500; }
+.author span { color: var(--muted); font-size: 14px; }
+.next-post { display: block; padding: 22px 24px; border: 1px solid var(--line); transition: border-color .2s; }
+.next-post:hover { border-color: #fff; }
+.next-post span { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-family: var(--font-display); }
+.next-post b { display: block; font-family: var(--font-display); font-weight: 500; font-size: 20px; margin-top: 8px; line-height: 1.25; }
+
+@media (max-width: 600px) {
+  .prose { font-size: 16.5px; }
+  .bars .row { grid-template-columns: 84px 1fr 56px; gap: 10px; font-size: 13px; }
+}
